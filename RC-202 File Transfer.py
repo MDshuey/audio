@@ -1,7 +1,7 @@
 mypath = 'D:/ROLAND/WAVE'
-mydest = "C:/Users/Mitch/OneDrive/crow/RC-202"
+mydest = 'C:/Users/Mitch/OneDrive/crow/RC-202'
 #-------------------------
-# Roland stores the recordings on the RC-202 as 8 memory slots, each with 8 banks.
+# BOSS/Roland stores the recordings on the RC-202 as 8 memory slots, each with 8 banks.
 # Each bank has 2 recording slots, for a total possible 128 recordings.
 # On the machine, each recording has its own folder with a number 1-64 for each bank.
 # This leads to a hard time finding and managing your recordings as you create them.
@@ -16,7 +16,7 @@ import shutil
 
 #create list of .wav files
 
-wavlist = glob.glob("D:/ROLAND/WAVE/*/*.wav")
+wavlist = glob.glob(mydest + "/*/*.wav")
 
 for filepath in wavlist:
 
@@ -28,7 +28,7 @@ for filepath in wavlist:
   ## First digit: Divide by 8 and round up
   memory = str(math.ceil(num/8))
 
-  ## Second Digit
+  ## Second Digit: Modulo (and account for 0)
   if num % 8 == 0:
     bank = '8'
   else: 
@@ -38,15 +38,6 @@ for filepath in wavlist:
   destpath = mydest + '/' + memory + '-' + bank + '_' + loop[1]
 
   if os.path.exists(destpath):
-    if os.path.getsize(destpath) != os.path.getsize(filepath):
-      print(destpath + "Transfer failed. Review/rename existing recordings.")
-    else:
-      print("Recording already transferred")
+      print(destpath + "Transfer failed: destination path exists. Review/rename existing recordings.")
   else:
     shutil.copy2(filepath, destpath)
-
-#---------------------------
-# SIMPLE COPY, NO RENAMING
-#
-# for filepath in wavlist:
-#   shutil.copy2(filepath, mydest + '/' + os.path.basename(filepath))
